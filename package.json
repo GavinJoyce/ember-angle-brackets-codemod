@@ -12,7 +12,7 @@
   "dependencies": {
     "@glimmer/syntax": "^0.41.0",
     "codemod-cli": "^0.2.10",
-    "prettier": "^1.18.2"
+    "prettier": "github:gavinjoyce/prettier#gj/improve-glimmer-support"
   },
   "repository": {
     "type": "git",

@@ -224,6 +224,10 @@ const transformNestedSubExpression = subExpression => {
  * @returns {undefined}
  */
 module.exports = function(fileInfo, api, options) {
+  if (fileInfo.source.trim().startsWith('{{!-- prettier-ignore-file --}}')) {
+    return fileInfo.source;
+  }
+
   const ast = glimmer.preprocess(fileInfo.source, {
     mode: 'codemod',
     parseOptions: { ignoreStandalone: true },
