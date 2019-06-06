@@ -33,7 +33,9 @@ class Config {
 const HTML_ATTRIBUTES = [
   "class",
   "placeholder",
-  "required"
+  "required",
+  "target",
+  "rel"
 ];
 
 const BUILT_IN_COMPONENTS = [
@@ -370,7 +372,23 @@ module.exports = function(fileInfo, api, options) {
     let params = tranformValuelessDataParams(node.params);
     let attributes = transformAttrs(node.hash.pairs);
 
+    // Intercom specific rules:
+    attributes = tranformIntercomSpecificAttributes(node, attributes);
+
     return params.concat(attributes);
+  };
+
+  const tranformIntercomSpecificAttributes = (node, attributes) => {
+    let tagName = node.path.original;
+    if (tagName === "composer-v2") { //composer-v2 accepts a `placeholder` argument
+      attributes.forEach(a => {
+        if (a.name === "placeholder") {
+          a.name = "@placeholder";
+        }
+      });
+    }
+
+    return attributes;
   };
 
   const getDataAttributesFromParams = params => {
@@ -463,7 +481,7 @@ module.exports = function(fileInfo, api, options) {
 
     ElementNode(node) {
       node.attributes.forEach(a => {
-        if (a.value && a.value.chars === "") {
+        if (a.name && a.name.startsWith('@') && a.value && a.value.chars === "") {
           a.value = b.text(_EMPTY_STRING_);
         }
       });
@@ -475,7 +493,7 @@ module.exports = function(fileInfo, api, options) {
 
   // Haxx out valueless data-* and args with the empty string
 
-  let uglySource = glimmer.print(ast).replace(attrEqualEmptyString,"");
+  let uglySource = glimmer.print(ast, { entityEncoding: 'raw' }).replace(attrEqualEmptyString,"");
   let dataOk = uglySource.replace(dataEqualsNoValue, "$1");
-  return prettier.format(dataOk, { parser: "glimmer" });
+  return prettier.format(dataOk, { parser: "glimmer" }) + "\n";
 };
