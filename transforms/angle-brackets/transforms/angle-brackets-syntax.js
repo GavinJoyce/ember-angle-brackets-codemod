@@ -280,6 +280,8 @@ module.exports = function(fileInfo, api, options) {
 
   const transformLinkToAttrs = params => {
     let attributes = [];
+    let dataAttributes = getDataAttributesFromParams(params);
+    params = getNonDataAttributesFromParams(params);
 
     let routeInputParam = params[0];
     let routeOutputParam;
@@ -310,12 +312,12 @@ module.exports = function(fileInfo, api, options) {
       attributes = [routeOutputParam, _modelsParam];
     }
 
-    return attributes;
+    return attributes.concat(dataAttributes);
   };
 
   const tranformValuelessDataParams = params => {
-    let valuelessDataParams = params.filter(param => param.original.startsWith('data-'));
-    let valuelessDataAttributes = valuelessDataParams.map(param => b.attr(param.parts[0], b.text(_EMPTY_STRING_)));
+    let dataAttributes = getDataAttributesFromParams(params);
+    let valuelessDataAttributes = dataAttributes.map(param => b.attr(param.parts[0], b.text(_EMPTY_STRING_)));
     return valuelessDataAttributes;
   };
 
@@ -324,6 +326,14 @@ module.exports = function(fileInfo, api, options) {
     let attributes = transformAttrs(node.hash.pairs);
 
     return params.concat(attributes);
+  };
+
+  const getDataAttributesFromParams = params => {
+    return params.filter(param => param.original && param.original.startsWith('data-'));
+  };
+
+  const getNonDataAttributesFromParams = params => {
+    return params.filter(p => !(p.original && p.original.startsWith('data-')));
   };
 
   const shouldIgnoreMustacheStatement = (name) => {
