@@ -29,7 +29,9 @@ class Config {
 const HTML_ATTRIBUTES = [
   "class",
   "placeholder",
-  "required"
+  "required",
+  "target",
+  "rel"
 ];
 
 const BUILT_IN_COMPONENTS = [
