@@ -217,6 +217,21 @@ const transformNestedSubExpression = subExpression => {
   return `(${subExpression.path.original} ${args.join(" ")})`;
 }
 
+
+const shouldSkipFile = fileInfo => {
+  let trimmedSource = fileInfo.source.trim();
+  if (trimmedSource.startsWith('{{!-- prettier-ignore-file --}}')) {
+    return true;
+  }
+
+  if (trimmedSource.includes("~")) { //skip files with `~` until https://github.com/rajasegar/ember-angle-brackets-codemod/issues/46 is resolved
+    console.warn(`WARNING: ${fileInfo.path} was not converted as it contains a "~".`);
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * exports
  *
@@ -226,7 +241,7 @@ const transformNestedSubExpression = subExpression => {
  * @returns {undefined}
  */
 module.exports = function(fileInfo, api, options) {
-  if (fileInfo.source.trim().startsWith('{{!-- prettier-ignore-file --}}')) {
+  if (shouldSkipFile(fileInfo)) {
     return fileInfo.source;
   }
 
