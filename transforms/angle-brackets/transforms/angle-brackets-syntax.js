@@ -342,7 +342,23 @@ module.exports = function(fileInfo, api, options) {
     let params = tranformValuelessDataParams(node.params);
     let attributes = transformAttrs(node.hash.pairs);
 
+    // Intercom specific rules:
+    attributes = tranformIntercomSpecificAttributes(node, attributes);
+
     return params.concat(attributes);
+  };
+
+  const tranformIntercomSpecificAttributes = (node, attributes) => {
+    let tagName = node.path.original;
+    if (tagName === "composer-v2") { //composer-v2 accepts a `placeholder` argument
+      attributes.forEach(a => {
+        if (a.name === "placeholder") {
+          a.name = "@placeholder";
+        }
+      });
+    }
+
+    return attributes;
   };
 
   const getDataAttributesFromParams = params => {
