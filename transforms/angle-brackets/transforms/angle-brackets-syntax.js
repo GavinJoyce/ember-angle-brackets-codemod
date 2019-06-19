@@ -18,6 +18,10 @@ class Config {
         this.helpers = config.helpers;
       }
 
+      if (config.skipFilesThatMatchRegex) {
+        this.skipFilesThatMatchRegex = new RegExp(config.skipFilesThatMatchRegex);
+      }
+
       this.skipBuiltInComponents = !!config.skipBuiltInComponents;
     }
   }
@@ -218,7 +222,7 @@ const transformNestedSubExpression = subExpression => {
 }
 
 
-const shouldSkipFile = fileInfo => {
+const shouldSkipFile = (fileInfo, config) => {
   let trimmedSource = fileInfo.source.trim();
   if (trimmedSource.startsWith('{{!-- prettier-ignore-file --}}')) {
     return true;
@@ -226,6 +230,10 @@ const shouldSkipFile = fileInfo => {
 
   if (trimmedSource.includes("~")) { //skip files with `~` until https://github.com/rajasegar/ember-angle-brackets-codemod/issues/46 is resolved
     console.warn(`WARNING: ${fileInfo.path} was not converted as it contains a "~".`);
+    return true;
+  }
+
+  if (config.skipFilesThatMatchRegex && config.skipFilesThatMatchRegex.test(trimmedSource)) {
     return true;
   }
 
@@ -241,7 +249,9 @@ const shouldSkipFile = fileInfo => {
  * @returns {undefined}
  */
 module.exports = function(fileInfo, api, options) {
-  if (shouldSkipFile(fileInfo)) {
+  const config = new Config(options);
+
+  if (shouldSkipFile(fileInfo, config)) {
     return fileInfo.source;
   }
 
@@ -250,8 +260,7 @@ module.exports = function(fileInfo, api, options) {
     parseOptions: { ignoreStandalone: true },
   });
   const b = glimmer.builders;
-  const config = new Config(options);
-  
+
   /**
    * Transform the attributes names & values properly 
    */
