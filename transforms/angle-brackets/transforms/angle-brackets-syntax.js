@@ -427,5 +427,5 @@ module.exports = function(fileInfo, api, options) {
 
   let uglySource = glimmer.print(ast).replace(attrEqualEmptyString,"");
   let dataOk = uglySource.replace(dataEqualsNoValue, "$1");
-  return prettier.format(dataOk, { parser: "glimmer" });
+  return prettier.format(dataOk, { parser: "glimmer" }) + "\n";
 };
