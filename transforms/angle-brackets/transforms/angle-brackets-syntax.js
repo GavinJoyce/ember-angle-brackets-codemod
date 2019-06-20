@@ -456,7 +456,7 @@ module.exports = function(fileInfo, api, options) {
 	
     ElementNode(node) {
       node.attributes.forEach(a => {
-        if (a.value && a.value.chars === "") {
+        if (a.name && a.name.startsWith('@') && a.value && a.value.chars === "") {
           a.value = b.text(_EMPTY_STRING_);
         }
       });
