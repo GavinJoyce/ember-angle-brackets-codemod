@@ -440,7 +440,10 @@ module.exports = function(fileInfo, api, options) {
     MustacheStatement(node) {
       // Don't change attribute statements
       const isValidMustache = node.loc.source !== "(synthetic)" && !shouldIgnoreMustacheStatement(node.path.original);
-      if (isValidMustache && (node.hash.pairs.length > 0 || node.params.length > 0)) {
+      const tagName = node.path.original;
+
+      const containsSlash = tagName && tagName.includes && tagName.includes('/');
+      if (isValidMustache && (node.hash.pairs.length > 0 || node.params.length > 0 || containsSlash)) {
         return transformNode(node);
       }
     },
