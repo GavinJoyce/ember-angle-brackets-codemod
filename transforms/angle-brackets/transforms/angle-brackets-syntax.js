@@ -468,6 +468,7 @@ module.exports = function(fileInfo, api, options) {
 
   // Haxx out valueless data-* and args with the empty string 
 
+  debugger;
   let uglySource = glimmer.print(ast).replace(attrEqualEmptyString,"");
   console.log('GJ: output from codemod', uglySource);
   let dataOk = uglySource.replace(dataEqualsNoValue, "$1");
