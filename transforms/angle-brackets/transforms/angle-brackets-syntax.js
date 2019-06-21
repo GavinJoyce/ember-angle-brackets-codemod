@@ -469,7 +469,7 @@ module.exports = function(fileInfo, api, options) {
   // Haxx out valueless data-* and args with the empty string 
 
   // console.log('AST', JSON.stringify(ast));
-  let uglySource = glimmer.print(astJson).replace(attrEqualEmptyString,"");
+  let uglySource = glimmer.print(ast).replace(attrEqualEmptyString,"");
   // console.log('GJ: output from codemod', uglySource);
   let dataOk = uglySource.replace(dataEqualsNoValue, "$1");
 
