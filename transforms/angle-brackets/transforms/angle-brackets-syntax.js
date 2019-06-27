@@ -163,7 +163,7 @@ const isAttribute = key => {
 }
 
 const isNestedComponentTagName = tagName => {
-  return tagName && tagName.includes && tagName.includes('/');
+  return tagName && tagName.includes && (tagName.includes('/') || tagName.includes('-'));
 }
 
 /**
