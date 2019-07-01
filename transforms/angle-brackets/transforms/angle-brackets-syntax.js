@@ -485,6 +485,11 @@ module.exports = function(fileInfo, api, options) {
           a.value = b.text(_EMPTY_STRING_);
         }
       });
+    },
+    MustacheCommentStatement(node) {
+      if (node.value.trim() === "template-lint-disable intercom/no-component-classic-invocation") {
+        return b.text('');
+      }
     }
   });
 
