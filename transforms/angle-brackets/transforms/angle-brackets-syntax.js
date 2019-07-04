@@ -247,12 +247,12 @@ const shouldSkipFile = (fileInfo, config) => {
   }
 
   if (config.skipFilesThatMatchRegex && config.skipFilesThatMatchRegex.test(source)) {
-    console.warn(`WARNING: ${fileInfo.path} was not skipped as its content matches the "skipFilesThatMatchRegex" config setting: ${config.skipFilesThatMatchRegex}`);
+    console.warn(`WARNING: ${fileInfo.path} was skipped as its content matches the "skipFilesThatMatchRegex" config setting: ${config.skipFilesThatMatchRegex}`);
     return true;
   }
 
-  if (config.skipFilesThatDontMatchRegex && config.skipFilesThatMatchRegex.test(source)) {
-    console.info(`INFO: ${fileInfo.path} was skipped as it does not contain a {{!-- template-lint-disable intercom/no-component-classic-invocation --}} comment`);
+  if (config.skipFilesThatDontMatchRegex && config.skipFilesThatDontMatchRegex.test(source)) {
+    console.info(`INFO: ${fileInfo.path} was skipped as its content does not match the "skipFilesThatDontMatchRegex" config setting: ${config.skipFilesThatDontMatchRegex`});
     return true;
   }
 
