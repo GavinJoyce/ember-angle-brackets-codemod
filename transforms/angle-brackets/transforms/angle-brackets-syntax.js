@@ -251,9 +251,11 @@ const shouldSkipFile = (fileInfo, config) => {
     return true;
   }
 
-  if (config.skipFilesThatDontMatchRegex && !config.skipFilesThatDontMatchRegex.test(source)) {
-    console.info(`INFO: ${fileInfo.path} was skipped as its content does not match the "skipFilesThatDontMatchRegex" config setting: ${config.skipFilesThatDontMatchRegex}`);
-    return true;
+  if (!fileInfo.path.endsWith("-test.js")) {
+    if (config.skipFilesThatDontMatchRegex && !config.skipFilesThatDontMatchRegex.test(source)) {
+      console.info(`INFO: ${fileInfo.path} was skipped as its content does not match the "skipFilesThatDontMatchRegex" config setting: ${config.skipFilesThatDontMatchRegex}`);
+      return true;
+    }
   }
 
   return false;
